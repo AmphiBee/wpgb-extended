@@ -34,7 +34,10 @@
   "autoload": {
     "psr-4": {
       "AmphiBee\\WpgbExtended\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true

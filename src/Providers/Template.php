@@ -1,14 +1,15 @@
 <?php
 namespace AmphiBee\WpgbExtended\Providers;
+
 /**
  * Template
  *
  * Wrapper for the Gridbuilder ᵂᴾ Template function
  *
- * @link    https://github.com/jjgrainger/PostTypes/
- * @author  jjgrainger
- * @link    https://jjgrainger.co.uk
- * @version 2.0
+ * @link    https://github.com/AmphiBee/wpgb-extended/
+ * @author  amphibee
+ * @link    https://amphibee.fr
+ * @version 1.0
  * @license https://opensource.org/licenses/mit-license.html MIT License
  */
 class Template
