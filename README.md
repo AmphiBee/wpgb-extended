@@ -42,4 +42,17 @@ Visit the official [Gridbuilder ᵂᴾ template documentation](https://docs.wpgr
 
 ## Facets
 
+### Get facet by slug
+
+You have now the possibility to get facet by slug
+
+```
+wpgb_render_facet([
+  'slug' => 'pagination',
+  'grid' => 'post-list'
+])
+```
+
+###  Registering facets
+
 @TODO
