@@ -1,6 +1,7 @@
 {
   "name": "amphibee/wpgb-extended",
   "description": "Register Gridbuilder ᵂᴾ template and (soon) facets with object oriented PHP",
+  "type": "wordpress-muplugin",
   "keywords": [
     "wpgb",
     "wp",
@@ -17,7 +18,8 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0"
+    "php": "^7.4 || ^8.0",
+    "amphibee/hookable": "dev-main"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
@@ -34,10 +36,7 @@
   "autoload": {
     "psr-4": {
       "AmphiBee\\WpgbExtended\\": "src/"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

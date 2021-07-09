@@ -22,8 +22,10 @@ class Facet
             [
                 'select' => 'id',
                 'from'   => 'facets',
-                'id'     => $slug,
+                'slug'     => $slug,
             ]
         );
+
+        return ! is_null($facet) ? (int)$facet['id'] : 0;
     }
 }
