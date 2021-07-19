@@ -1,0 +1,62 @@
+{
+    "name": "amphibee/hookable",
+    "description": "An object-oriented package for the WordPress Plugin API.",
+    "keywords": [
+        "hooks",
+        "wordpress plugin api",
+        "wordpress",
+        "hooks oop"
+    ],
+    "homepage": "https://github.com/amphibee/hookable",
+    "license": "MIT",
+    "authors": [
+        {
+          "name": "Olivier Gorzalka",
+          "email": "olivier@amphibee.fr",
+          "homepage": "https://amphibee.fr",
+          "role": "CTO"
+        },
+        {
+            "name": "Ryan Chandler",
+            "email": "ryan@digitalbit.uk",
+            "homepage": "https://digitalbit.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpunit/phpunit": "^9.0",
+        "symfony/var-dumper": "^5.1",
+        "vimeo/psalm": "^3.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "AmphiBee\\Hooks\\": "src"
+        },
+        "files": [
+            "src/Support/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AmphiBee\\Hooks\\Tests\\": "tests"
+        },
+        "files": [
+            "tests/__fixtures__/functions.php"
+        ]
+    },
+    "scripts": {
+        "psalm": "vendor/bin/psalm",
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
