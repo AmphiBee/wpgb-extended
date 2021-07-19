@@ -44,7 +44,7 @@ class Template
         $slug = $this->getSlug();
 
         // Register template
-        add_filter('wp_grid_builder/templates', function () use ($slug, $templateArgs) {
+        add_filter('wp_grid_builder/templates', function ($templates) use ($slug, $templateArgs) {
             $templates[$slug] = $templateArgs;
             return $templates;
         }, 10, 1);
