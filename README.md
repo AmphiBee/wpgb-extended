@@ -53,6 +53,12 @@ wpgb_render_facet([
 ])
 ```
 
+### Facets sync
+
+WPGB Extended allows you to synchronize all of your facets. This is useful when working with multiple environments (local, staging, production).
+Like Advanced Custom Fields, the facets are stored in json files. By default, they are stored in your theme folder (`wpgb-json` folder).
+You can customize this folder with the `wp_grid_builder/sync/json_folder` filter
+
 ###  Registering facets
 
 @TODO
