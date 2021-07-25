@@ -57,7 +57,7 @@ class FacetSync
         $args = $this->exportArgs();
         $wpgbExport = new Export();
         $facetSettings = $wpgbExport->export_items($args);
-        $jsonContent = wp_json_encode( (array) $facetSettings );
+        $jsonContent = json_encode( (array) $facetSettings, JSON_PRETTY_PRINT );
         $jsonFileName = $facetSettings['facets'][0]['slug'];
         Filemanager::saveJson($jsonFileName, 'facet', $jsonContent);
     }
