@@ -7,11 +7,10 @@ use AmphiBee\Hooks\Filter;
 use AmphiBee\WpgbExtended\Support\Facades\Config;
 
 /**
- * @package  ObjectPress
- * @author   AmphiBee / tgeorgel
+ * @author   AmphiBee
  * @access   public
- * @version  2.0
- * @since    2.0
+ * @version  1.0
+ * @since    1.0
  */
 class HookProvider
 {

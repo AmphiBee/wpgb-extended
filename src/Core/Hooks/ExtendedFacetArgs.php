@@ -2,7 +2,7 @@
 namespace AmphiBee\WpgbExtended\Core\Hooks;
 
 use AmphiBee\Hooks\Contracts\Hookable;
-use AmphiBee\WpgbExtended\Providers\Facet;
+use AmphiBee\WpgbExtended\Models\Facet;
 
 class ExtendedFacetArgs implements Hookable
 {
@@ -23,7 +23,7 @@ class ExtendedFacetArgs implements Hookable
         $this->args = $args;
 
         if (isset($args['slug'])) {
-            $this->args['id'] = \AmphiBee\WpgbExtended\Providers\Facet::getBySlug($args['slug']);;
+            $this->args['id'] = Facet::getBySlug($args['slug']);
         }
     }
     /**

@@ -1,5 +1,5 @@
 <?php
-namespace AmphiBee\WpgbExtended\Providers;
+namespace AmphiBee\WpgbExtended\Models;
 
 /**
  * Facet

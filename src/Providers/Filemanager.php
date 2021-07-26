@@ -61,8 +61,7 @@ class Filemanager
             return false;
         }
 
-        $lastUpdated = include $lastUpdatedFile;
-        $this->setLastUpdated($lastUpdated);
+        $this->lastUpdated = include $lastUpdatedFile;
 
         return (int) $this->lastUpdated;
     }
@@ -86,11 +85,11 @@ class Filemanager
      * Get the last updated time
      * @return int
      */
-    public function getLastUpdatedFile(): int
+    public function getLastUpdatedFile(): string
     {
         $path = $this->getJsonTypeFolder();
         $this->lastUpdatedFile = $path . DIRECTORY_SEPARATOR . 'last-updated.php';
-        return (int) $this->lastUpdatedFile;
+        return $this->lastUpdatedFile;
     }
 
     /**

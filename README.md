@@ -7,6 +7,7 @@ Gridbuilder ᵂᴾ Extended provides an object oriented API to register template
 - [Installation](#installation)
 - [Templates](#templates)
 - [Facets](#facets)
+- [Content sync](#content-sync)
 
 ## Installation
 
@@ -53,12 +54,14 @@ wpgb_render_facet([
 ])
 ```
 
-### Facets sync
-
-WPGB Extended allows you to synchronize all of your facets. This is useful when working with multiple environments (local, staging, production).
-Like Advanced Custom Fields, the facets are stored in json files. By default, they are stored in your theme folder (`wpgb-json` folder).
-You can customize this folder with the `wp_grid_builder/sync/json_folder` filter
-
 ###  Registering facets
 
 @TODO
+
+## Content sync
+
+WPGB Extended allows you to synchronize all of your content (grids, cards, facets). This is useful when working with multiple environments (local, staging, production).
+Like Advanced Custom Fields, the facets are stored in json files. By default, they are stored in your theme folder (`wpgb-json` folder).
+You can customize this folder with the `wp_grid_builder/sync/json_folder` filter
+
+It's possible to deactivate the synchronization globally with the filter `wp_grid_builder/enable_sync` or to deactivate it by entity with the filter `wpgb/{$type}/enable_sync` (ex. `wpgb/card/enable_sync`)
