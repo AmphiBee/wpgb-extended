@@ -112,7 +112,7 @@ class Filemanager
     public function needToSync(): bool
     {
         $lastUpdated = $this->getLastUpdated();
-        return get_option("wpgb/{$this->type}/last_sync") !== $lastUpdated;
+        return (int) get_option("wpgb/{$this->type}/last_sync") !== $lastUpdated;
     }
 
     /**
