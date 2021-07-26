@@ -60,10 +60,10 @@ wpgb_render_facet([
 
 ## Content sync
 
-WPGB Extended allows you to synchronize all of your content (grids, cards, facets). This is useful when working with multiple environments (local, staging, production).
+Gridbuilder ᵂᴾ Extended allows you to synchronize all of your content (grids, cards, facets). This is useful when working with multiple environments (local, staging, production).
 Like Advanced Custom Fields, the grids, cards, facets are stored in json files. By default, they are stored in your theme folder (`wpgb-json` folder).
 You can customize this folder with the `wp_grid_builder/sync/json_folder` filter
 
 It's possible to deactivate the synchronization globally with the filter `wp_grid_builder/enable_sync` or to deactivate it by entity with the filter `wpgb/{$type}/enable_sync` (ex. `wpgb/card/enable_sync`)
 
-*Note: For maps and grids, WP Grid Builder does not offer a single slug. WPGB Extended is based on name by default. It is therefore important to be aware that it will not have to change in the meantime in which case, a duplicate will be created. In the same way, it is important that the name is unique otherwise it will generate conflicts on synchronizations (an alert function will be planned on the next versions)*
+*Note: For maps and grids, Gridbuilder ᵂᴾ does not offer a single slug. Gridbuilder ᵂᴾ Extended is based on name by default. It is therefore important to be aware that it will not have to change in the meantime in which case, a duplicate will be created. In the same way, it is important that the name is unique otherwise it will generate conflicts on synchronizations (an alert function will be planned on the next versions)*
