@@ -19,54 +19,77 @@ use WP_Grid_Builder\Includes\Database;
 class FacetSync
 {
     private $facetId = 0;
+    protected $type = 'facets';
+    protected $fs;
 
     public function __construct(int $facetId = 0)
     {
         $this->facetId = $facetId;
-        Filemanager::maybeCreateJsonFolder('facet');
+        $this->fs = new Filemanager($this->type);
     }
 
+    /**
+     * Shortcut for the export method
+     */
     public function save()
     {
         $this->export();
     }
 
-    public function importOrUpdate() {
-        $path = Filemanager::getJsonFolder() . DIRECTORY_SEPARATOR . 'facet';
-        $jsonFiles = Filemanager::getJsonFiles($path);
+    /**
+     * Maybe import or create facet within the database
+     */
+    public function importOrUpdate()
+    {
+        $jsonFiles = $this->fs->getJsonFiles();
         foreach ($jsonFiles as $jsonFile) {
-            $facetSettings = Filemanager::parseJson($jsonFile);
+            $facetSettings = $this->fs->parseJson($jsonFile);
             $settings = $this->formatSettings($facetSettings);
             $slug = $facetSettings->facets[0]->slug;
             $facetId = Facet::getBySlug($slug);
-
             Database::save_row('facets', $settings, $facetId);
-
         }
     }
 
-    protected function formatSettings($settings) {
+
+    /**
+     * Save facet into a json file
+     */
+    private function export()
+    {
+        $args = $this->exportArgs();
+        $wpgbExport = new Export();
+        $facetSettings = $wpgbExport->export_items($args);
+        $jsonContent = json_encode((array)$facetSettings, JSON_PRETTY_PRINT);
+        $jsonFileName = $facetSettings[$this->type][0]['slug'];
+        $this->fs->saveJson($jsonFileName, $jsonContent);
+    }
+
+    /**
+     * Make settings compatible with the database format
+     * @param $settings : Original settings
+     * @return array : Formatted settings
+     */
+    protected function formatSettings($settings): array
+    {
         $settings = $settings->facets[0];
-        $settings = (array) $settings;
+        $settings = (array)$settings;
         $settings['settings'] = json_encode($settings['settings']);
         unset($settings['id']);
         return $settings;
     }
 
-    private function export() {
-        $args = $this->exportArgs();
-        $wpgbExport = new Export();
-        $facetSettings = $wpgbExport->export_items($args);
-        $jsonContent = json_encode( (array) $facetSettings, JSON_PRETTY_PRINT );
-        $jsonFileName = $facetSettings['facets'][0]['slug'];
-        Filemanager::saveJson($jsonFileName, 'facet', $jsonContent);
-    }
-
-    private function exportArgs() {
+    /**
+     * Set the export argument compatible
+     * with the WPGB export items method
+     * @return array
+     */
+    private function exportArgs(): array
+    {
         return [
             'action' => 'wpgb_export',
-            'page' => 'wpgb-facets',
-            'type' => 'facets',
+            'page' => 'wpgb-' . $this->type,
+            'type' => $this->type,
             'ids' => $this->facetId,
         ];
     }

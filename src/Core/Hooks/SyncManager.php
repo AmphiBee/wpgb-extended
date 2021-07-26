@@ -13,9 +13,6 @@ class SyncManager implements Hookable
      */
     public $hook = 'init';
 
-    private $facetId = 0;
-
-
     /**
      * Hook Priority
      */
@@ -28,7 +25,8 @@ class SyncManager implements Hookable
      */
     public function execute()
     {
-        if (Filemanager::needToSync('facet')) {
+        $facetFs = new Filemanager('facets');
+        if ($facetFs->needToSync()) {
             (new FacetSync())->importOrUpdate();
         }
     }

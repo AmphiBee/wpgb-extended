@@ -15,73 +15,179 @@ namespace AmphiBee\WpgbExtended\Providers;
  */
 class Filemanager
 {
+    protected $type;
+    protected $lastUpdatedFile;
+    protected $lastUpdated;
 
-    public static function needToSync($type)
+    public function __construct(string $type)
     {
-        $path = self::getJsonFolder();
-        $lastUpdatedFile = $path . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . 'last-updated.php';
+        $this->setType($type);
+        $this->maybeCreateJsonFolder();
+    }
+
+    /**
+     * Get the type of item
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the type of item
+     * @param mixed $type
+     * @return Filemanager
+     */
+    public function setType($type): Filemanager
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get the last updated time
+     * @return int
+     */
+    public function getLastUpdated(): int
+    {
+        if (!is_null($this->lastUpdated)) {
+            return $this->lastUpdated;
+        }
+
+        $lastUpdatedFile = $this->getLastUpdatedFile();
+
         if (!file_exists($lastUpdatedFile)) {
             return false;
         }
-        include $lastUpdatedFile;
-        return get_option("wpgb/{$type}/last_sync") !== $wpgbFacetsHash;
+
+        $lastUpdated = include $lastUpdatedFile;
+        $this->setLastUpdated($lastUpdated);
+
+        return (int) $this->lastUpdated;
     }
 
-    public static function maybeCreateJsonFolder($type)
+    /**
+     * Set the last update time
+     * @param int $lastUpdated
+     * @return Filemanager
+     */
+    public function setLastUpdated(int $lastUpdated): Filemanager
     {
-        $path = self::getJsonFolder();
+        $path = $this->getLastUpdatedFile();
+        $phpFileContent = '<?php return ' . $lastUpdated . '; ?>';
+        file_put_contents($path, $phpFileContent);
+        update_option("wpgb/{$this->type}/last_sync", $lastUpdated);
+        $this->lastUpdated = $lastUpdated;
+        return $this;
+    }
+
+    /**
+     * Get the last updated time
+     * @return int
+     */
+    public function getLastUpdatedFile(): int
+    {
+        $path = $this->getJsonTypeFolder();
+        $this->lastUpdatedFile = $path . DIRECTORY_SEPARATOR . 'last-updated.php';
+        return (int) $this->lastUpdatedFile;
+    }
+
+    /**
+     * Set the last updated file
+     * @param string $lastUpdatedFile
+     * @return Filemanager
+     */
+    public function setLastUpdatedFile(string $lastUpdatedFile)
+    {
+        $this->lastUpdatedFile = $lastUpdatedFile;
+        return $this;
+    }
+
+
+    /**
+     * Indicate if synchronisation is needed
+     * @return bool
+     */
+    public function needToSync(): bool
+    {
+        $lastUpdated = $this->getLastUpdated();
+        return get_option("wpgb/{$this->type}/last_sync") !== $lastUpdated;
+    }
+
+    /**
+     * Create json folders if needed
+     */
+    public function maybeCreateJsonFolder()
+    {
+        $path = $this->getJsonFolder();
+
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        if (!file_exists($path . DIRECTORY_SEPARATOR . $type)) {
-            mkdir($path . DIRECTORY_SEPARATOR . $type, 0777, true);
+        if (!file_exists($path . DIRECTORY_SEPARATOR . $this->type)) {
+            mkdir($path . DIRECTORY_SEPARATOR . $this->type, 0777, true);
         }
     }
 
-    public static function getJsonFolder()
+    /**
+     * Return the main json folder
+     * @return string
+     */
+    protected static function getJsonFolder(): string
     {
         return apply_filters('wp_grid_builder/facet/json_folder', get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'wpgb-json');
     }
 
-    public static function saveJson($name, $type, $content) {
-        $path = self::getJsonFolder();
-        file_put_contents($path . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $name . '.json', $content);
-        self::setLastExportTime('facet', $path);
-    }
-
-    public static function setLastExportTime($type, $path)
+    /**
+     * Return the specific type json folder
+     * @return string
+     */
+    protected function getJsonTypeFolder(): string
     {
-        $hash = self::getJsonFolderHash($path . DIRECTORY_SEPARATOR . $type);
-        $phpFileContent = '<?php $wpgbFacetsHash = \'' . $hash . '\'; ?>';
-        file_put_contents($path . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . 'last-updated.php', $phpFileContent);
-        update_option("wpgb/{$type}/last_sync", $hash);
+        $path = self::getJsonFolder();
+        return $path . DIRECTORY_SEPARATOR . $this->type;
     }
 
-    public static function parseJson($file) {
+    /**
+     * Save settings as json and
+     * set the last updated time
+     * @param string $name : Json slug
+     * @param string $content : The settings of the item
+     */
+    public function saveJson(string $name, string $content)
+    {
+        $path = $this->getJsonTypeFolder();
+        file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.json', $content);
+        $this->setLastUpdated(time());
+    }
+
+    /**
+     * Read a json file
+     * @param string $file
+     * @return mixed
+     */
+    public function parseJson(string $file)
+    {
         $content = file_get_contents($file);
         return json_decode($content);
     }
 
-    public static function getJsonFiles($dir): array
+    /**
+     * Collect every json file of a type folder
+     * @return array
+     */
+    public function getJsonFiles(): array
     {
+        $path = $this->getJsonTypeFolder();
         $jsonFiles = [];
-        $files = scandir($dir);
+        $files = scandir($path);
         foreach ($files as $file) {
             if (strpos($file, '.json') === false) {
                 continue;
             }
-            $jsonFiles[] = $dir . DIRECTORY_SEPARATOR . $file;
+            $jsonFiles[] = $path . DIRECTORY_SEPARATOR . $file;
         }
         return $jsonFiles;
-    }
-
-    public static function getJsonFolderHash($dir)
-    {
-        $files = self::getJsonFiles($dir);
-        $hashes = [];
-        foreach ($files as $file) {
-            $hashes[] = md5_file($file);
-        }
-        return md5(json_encode($hashes));
     }
 }
