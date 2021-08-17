@@ -2,6 +2,7 @@
 
 namespace AmphiBee\WpgbExtended\Providers;
 
+use AmphiBee\WpgbExtended\Providers\Filemanager;
 use WP_Grid_Builder\Admin\Export;
 use WP_Grid_Builder\Includes\Database;
 
@@ -24,11 +25,11 @@ abstract class ItemSync
 
     public function __construct(int $itemId = 0)
     {
+        $this->fs = new Filemanager($this->type);
         if ($this->isSyncEnabled()) {
             return;
         }
         $this->itemId = $itemId;
-        $this->fs = new Filemanager($this->type);
     }
 
     /**
@@ -57,6 +58,12 @@ abstract class ItemSync
             return;
         }
 
+        if (!$this->fs->needToSync()) {
+            return;
+        }
+
+        var_dump($this->type);
+
         $jsonFiles = $this->fs->getJsonFiles();
         foreach ($jsonFiles as $jsonFile) {
             $jsonSettings = $this->fs->parseJson($jsonFile);
@@ -78,6 +85,7 @@ abstract class ItemSync
     protected function saveRow(int $itemId, array $settings)
     {
         Database::save_row($this->type, $settings, $itemId);
+        update_option("wpgb/{$this->type}/last_sync", $this->fs->getLastUpdated());
     }
 
     /**
