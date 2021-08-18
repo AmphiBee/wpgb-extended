@@ -19,4 +19,5 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class GridSync extends ItemSync
 {
     protected $type = 'grids';
+    protected $identifier = 'name';
 }

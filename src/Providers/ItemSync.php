@@ -63,7 +63,12 @@ abstract class ItemSync
         }
 
         $jsonFiles = $this->fs->getJsonFiles();
+
         foreach ($jsonFiles as $jsonFile) {
+            $slug = str_replace('.json', '', basename($jsonFile));
+            if (!$this->fs->needToSync($slug)) {
+                continue;
+            }
             $jsonSettings = $this->fs->parseJson($jsonFile);
             $settings = $this->formatSettings($jsonSettings);
             $itemId = $this->getItem($jsonSettings);
@@ -74,7 +79,7 @@ abstract class ItemSync
     protected function getItem(object $settings)
     {
         $modalClass = 'AmphiBee\\WpgbExtended\\Models\\' . ucfirst(substr($this->type, 0, -1));
-        $slug = $settings->{$this->type}[0]->slug;
+        $slug = $settings->{$this->type}[0]->{$this->identifier};
         return call_user_func([$modalClass, 'getBySlug'], $slug);
     }
 
@@ -86,7 +91,8 @@ abstract class ItemSync
     protected function saveRow(int $itemId, array $settings)
     {
         Database::save_row($this->type, $settings, $itemId);
-        $this->fs->setDbLastUpdated($this->fs->getLastUpdated());
+        $slug = $settings[$this->identifier];
+        $this->fs->setDbLastUpdated($this->fs->getLastUpdated(), $slug);
     }
 
     /**

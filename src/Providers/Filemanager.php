@@ -46,24 +46,45 @@ class Filemanager
     }
 
     /**
-     * Get the last updated time
-     * @return int
+     * Get last updated datas from generated file
+     * @return array
      */
-    public function getLastUpdated(): int
+    public function getLastUpdatedDatas(): array
     {
-        if (!is_null($this->lastUpdated) && isset($this->lastUpdated['_wpgb_last_sync'])) {
-            return $this->lastUpdated['_wpgb_last_sync'];
-        }
+        $default = ['_wpgb_last_sync' => 0];
 
         $lastUpdatedFile = $this->getLastUpdatedFile();
 
         if (!file_exists($lastUpdatedFile)) {
-            return false;
+            return $default;
         }
 
         $this->lastUpdated = include $lastUpdatedFile;
 
-        return (int)$this->lastUpdated['_wpgb_last_sync'];
+        if (!is_array($this->lastUpdated)) {
+            return $default;
+        }
+
+        if (!isset($this->lastUpdated['_wpgb_last_sync'])) {
+            $this->lastUpdated['_wpgb_last_sync'] = 0;
+        }
+
+        return $this->lastUpdated;
+    }
+
+    /**
+     * Get the last updated time
+     * @return int
+     */
+    public function getLastUpdated($itemSlug = '_wpgb_last_sync'): int
+    {
+        if (!is_null($this->lastUpdated) && isset($this->lastUpdated[$itemSlug])) {
+            return $this->lastUpdated[$itemSlug];
+        }
+
+        $this->lastUpdated = $this->getLastUpdatedDatas();
+
+        return (int)$this->lastUpdated[$itemSlug];
     }
 
     /**
@@ -73,34 +94,70 @@ class Filemanager
      */
     public function setLastUpdated(int $lastUpdated, string $label = '_wpgb_last_sync'): Filemanager
     {
-        $params = [
-            $label => $lastUpdated,
-        ];
+        $params = $this->getLastUpdatedDatas();
 
         $path = $this->getLastUpdatedFile();
+
+        $params[$label] = $lastUpdated;
+        if ($label !== '_wpgb_last_sync') {
+            $params['_wpgb_last_sync'] = $lastUpdated;
+        }
+
+        $params = $this->cleanLastSyncParams($params);
+
         $phpFileContent = '<?php return ' . var_export($params, true) . ';';
         file_put_contents($path, $phpFileContent);
-        update_option("wpgb/{$this->type}/last_sync", $lastUpdated);
+        $this->setDbLastUpdated($lastUpdated, $label);
         $this->lastUpdated = $lastUpdated;
         return $this;
+    }
+
+    public function getDbLastSync(): array
+    {
+        return (array)get_option("wpgb/{$this->type}/last_sync");
     }
 
     /**
      * Get the last updated time from database
      * @return int
      */
-    public function getDbLastUpdated(): int
+    public function getDbLastUpdated($itemSlug = '_wpgb_last_sync'): int
     {
-        return (int)get_option("wpgb/{$this->type}/last_sync");
+        $lastUpdated = $this->getDbLastSync();
+
+        if (!isset($lastUpdated[$itemSlug])) {
+            $lastUpdated[$itemSlug] = 0;
+        }
+
+        return (int)$lastUpdated[$itemSlug];
     }
 
     /**
      * Get the last updated time from database
      * @return bool
      */
-    public function setDbLastUpdated($lastUpdated): bool
+    public function setDbLastUpdated($lastUpdated, string $label = '_wpgb_last_sync'): bool
     {
-        return update_option("wpgb/{$this->type}/last_sync", $lastUpdated);;
+        $lastSync = $this->getDbLastSync();
+        $lastSync[$label] = $lastUpdated;
+
+        if ($label !== '_wpgb_last_sync') {
+            $lastSync['_wpgb_last_sync'] = $lastUpdated;
+        }
+
+        $lastSync = $this->cleanLastSyncParams($lastSync);
+
+        return update_option("wpgb/{$this->type}/last_sync", $lastSync, true);
+    }
+
+    public function cleanLastSyncParams(array $params): array {
+        $allowed = [ '_wpgb_last_sync' ];
+
+        foreach ($this->getJsonFiles() as $jsonFile) {
+            $allowed[] = str_replace('.json', '', basename($jsonFile));
+        }
+
+        return array_intersect_key($params, array_flip($allowed));
     }
 
     /**
@@ -130,10 +187,12 @@ class Filemanager
      * Indicate if synchronisation is needed
      * @return bool
      */
-    public function needToSync(): bool
+    public function needToSync(string $slug = '_wpgb_last_sync'): bool
     {
-        $lastUpdated = $this->getLastUpdated();
-        return $this->getDbLastUpdated() !== $lastUpdated;
+        $lastUpdated = $this->getLastUpdated($slug);
+        $dbLastUpdated = $this->getDbLastUpdated($slug);
+
+        return $dbLastUpdated !== $lastUpdated;
     }
 
     /**
@@ -180,7 +239,7 @@ class Filemanager
     {
         $path = $this->getJsonTypeFolder();
         file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.json', $content);
-        $this->setLastUpdated(time());
+        $this->setLastUpdated(time(), $name);
     }
 
     /**
@@ -191,7 +250,7 @@ class Filemanager
     public function parseJson(string $file)
     {
         $content = file_get_contents($file);
-        return json_decode($content);
+        return \json_decode($content);
     }
 
     /**

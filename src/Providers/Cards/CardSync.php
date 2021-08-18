@@ -19,4 +19,5 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class CardSync extends ItemSync
 {
     protected $type = 'cards';
+    protected $identifier = 'name';
 }

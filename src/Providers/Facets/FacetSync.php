@@ -19,4 +19,5 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class FacetSync extends ItemSync
 {
     protected $type = 'facets';
+    protected $identifier = 'slug';
 }

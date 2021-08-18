@@ -7,7 +7,7 @@ use AmphiBee\WpgbExtended\Providers\Cards\CardSync;
 
 class SyncSavedCard implements Hookable
 {
-    public $hook = 'wp_grid_builder/save/grid';
+    public $hook = 'wp_grid_builder/save/card';
     private $gridId = 0;
     public $priority = 13;
 
