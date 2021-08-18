@@ -19,13 +19,4 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class FacetSync extends ItemSync
 {
     protected $type = 'facets';
-
-    /**
-     * Get the facet item in the database
-     */
-    protected function getItem(object $jsonSettings)
-    {
-        $slug = $jsonSettings->{$this->type}[0]->slug;
-        return Facet::getBySlug($slug);
-    }
 }

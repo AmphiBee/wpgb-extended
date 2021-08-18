@@ -51,8 +51,8 @@ class Filemanager
      */
     public function getLastUpdated(): int
     {
-        if (!is_null($this->lastUpdated)) {
-            return $this->lastUpdated;
+        if (!is_null($this->lastUpdated) && isset($this->lastUpdated['_wpgb_last_sync'])) {
+            return $this->lastUpdated['_wpgb_last_sync'];
         }
 
         $lastUpdatedFile = $this->getLastUpdatedFile();
@@ -63,7 +63,7 @@ class Filemanager
 
         $this->lastUpdated = include $lastUpdatedFile;
 
-        return (int) $this->lastUpdated;
+        return (int)$this->lastUpdated['_wpgb_last_sync'];
     }
 
     /**
@@ -71,14 +71,36 @@ class Filemanager
      * @param int $lastUpdated
      * @return Filemanager
      */
-    public function setLastUpdated(int $lastUpdated): Filemanager
+    public function setLastUpdated(int $lastUpdated, string $label = '_wpgb_last_sync'): Filemanager
     {
+        $params = [
+            $label => $lastUpdated,
+        ];
+
         $path = $this->getLastUpdatedFile();
-        $phpFileContent = '<?php return ' . $lastUpdated . '; ?>';
+        $phpFileContent = '<?php return ' . var_export($params, true) . ';';
         file_put_contents($path, $phpFileContent);
         update_option("wpgb/{$this->type}/last_sync", $lastUpdated);
         $this->lastUpdated = $lastUpdated;
         return $this;
+    }
+
+    /**
+     * Get the last updated time from database
+     * @return int
+     */
+    public function getDbLastUpdated(): int
+    {
+        return (int)get_option("wpgb/{$this->type}/last_sync");
+    }
+
+    /**
+     * Get the last updated time from database
+     * @return bool
+     */
+    public function setDbLastUpdated($lastUpdated): bool
+    {
+        return update_option("wpgb/{$this->type}/last_sync", $lastUpdated);;
     }
 
     /**
@@ -97,7 +119,7 @@ class Filemanager
      * @param string $lastUpdatedFile
      * @return Filemanager
      */
-    public function setLastUpdatedFile(string $lastUpdatedFile)
+    public function setLastUpdatedFile(string $lastUpdatedFile): Filemanager
     {
         $this->lastUpdatedFile = $lastUpdatedFile;
         return $this;
@@ -111,7 +133,7 @@ class Filemanager
     public function needToSync(): bool
     {
         $lastUpdated = $this->getLastUpdated();
-        return (int) get_option("wpgb/{$this->type}/last_sync") !== $lastUpdated;
+        return $this->getDbLastUpdated() !== $lastUpdated;
     }
 
     /**

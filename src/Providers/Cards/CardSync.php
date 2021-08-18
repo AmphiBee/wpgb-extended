@@ -19,13 +19,4 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class CardSync extends ItemSync
 {
     protected $type = 'cards';
-
-    /**
-     * Get the card item in the database
-     */
-    protected function getItem(object $jsonSettings)
-    {
-        $name = $jsonSettings->{$this->type}[0]->name;
-        return Card::getByName($name);
-    }
 }

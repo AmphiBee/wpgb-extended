@@ -26,10 +26,10 @@ abstract class ItemSync
     public function __construct(int $itemId = 0)
     {
         $this->fs = new Filemanager($this->type);
+        $this->itemId = $itemId;
         if ($this->isSyncEnabled()) {
             return;
         }
-        $this->itemId = $itemId;
     }
 
     /**
@@ -62,8 +62,6 @@ abstract class ItemSync
             return;
         }
 
-        var_dump($this->type);
-
         $jsonFiles = $this->fs->getJsonFiles();
         foreach ($jsonFiles as $jsonFile) {
             $jsonSettings = $this->fs->parseJson($jsonFile);
@@ -75,6 +73,9 @@ abstract class ItemSync
 
     protected function getItem(object $settings)
     {
+        $modalClass = 'AmphiBee\\WpgbExtended\\Models\\' . ucfirst(substr($this->type, 0, -1));
+        $slug = $settings->{$this->type}[0]->slug;
+        return call_user_func([$modalClass, 'getBySlug'], $slug);
     }
 
     /**
@@ -85,7 +86,7 @@ abstract class ItemSync
     protected function saveRow(int $itemId, array $settings)
     {
         Database::save_row($this->type, $settings, $itemId);
-        update_option("wpgb/{$this->type}/last_sync", $this->fs->getLastUpdated());
+        $this->fs->setDbLastUpdated($this->fs->getLastUpdated());
     }
 
     /**

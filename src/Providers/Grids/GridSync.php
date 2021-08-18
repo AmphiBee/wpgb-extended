@@ -19,13 +19,4 @@ use AmphiBee\WpgbExtended\Providers\ItemSync;
 class GridSync extends ItemSync
 {
     protected $type = 'grids';
-
-    /**
-     * Get the grid item in the database
-     */
-    protected function getItem(object $jsonSettings)
-    {
-        $name = $jsonSettings->{$this->type}[0]->name;
-        return Grid::getByName($name);
-    }
 }
