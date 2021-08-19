@@ -2,7 +2,6 @@
 
 namespace AmphiBee\WpgbExtended\Providers\Facets;
 
-use AmphiBee\WpgbExtended\Models\Facet;
 use AmphiBee\WpgbExtended\Providers\ItemSync;
 
 /**
