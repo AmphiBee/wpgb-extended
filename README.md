@@ -56,7 +56,57 @@ wpgb_render_facet([
 
 ###  Registering facets
 
-@TODO
+Gridbuilder ᵂᴾ Extended permet de déclarer les facettes via des méthodes spécifiques en fonction du type de facette. L'extension d'origine reposant exclusivement sur la base de données, l'outil gère une synchronisation entre ce qui est déclaré côté code et ce qui est présent en base de données (par un hash de modification).
+
+#### Facettes disponibles :
+
+##### Pagination
+
+`PaginationFacet` is used to create a pagination facet.
+
+`AmphiBee\WpgbExtended\Providers\Facets\PaginationFacet`
+
+```
+(new PaginationFacet())
+    ->disableShowAll()
+    ->enableNavigationButton()
+    ->enableScrollToTop()
+    ->setPrevText('Préc.')
+    ->setNextText('Suiv.')
+    ->register();
+```
+
+**Available methods**
+
+`setPaginationType` : Set the type of pagination  
+Arguments : **$value** (Possible values : `numbered`, `prev_next`)
+
+`enableShowAll` : Show all of the pages instead of a short list of the pages near the current page
+
+`disableShowAll` : Disable the show of all of the pages instead of a short list of the pages near the current page
+
+`setMiddlePagesSize` : Set how many numbers to either side of current page, but not including current page.  
+Arguments : **$value** Integer
+
+`setEndPagesSize` : Set how many numbers to either side of current page, but not including current page.  
+Arguments : **$value** Integer
+
+`setDotText` : Set the text of the dots. Default : …  
+Arguments : **$value** String
+
+`enableNavigationButton` : Enable navigation buttons
+
+`disableNavigationButton` : Disable navigation buttons
+
+`setPrevText` : Set the text of the previous button  
+Arguments : **$value** String
+
+`setNextText` : Set the text of the next button  
+Arguments : **$value** String
+
+`enableScrollToTop` : Enable scroll to top at the change of the page
+
+`disableScrollToTop` : Disable scroll to top at the change of the page
 
 ## Content sync
 
