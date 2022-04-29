@@ -216,7 +216,7 @@ class Filemanager
      */
     protected static function getJsonFolder(): string
     {
-        return apply_filters('wp_grid_builder/facet/json_folder', get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'wpgb-json');
+        return apply_filters('wp_grid_builder/sync/json_folder', get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'wpgb-json');
     }
 
     /**
