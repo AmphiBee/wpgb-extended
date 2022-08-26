@@ -19,14 +19,17 @@ class Grid
 {
     public static function getBySlug(string $name): int
     {
-        $grid = Database::query_row(
-            [
-                'select' => 'id',
-                'from' => 'grids',
-                'name' => $name,
-            ]
-        );
+        if(class_exists('WP_Grid_Builder\Includes\Database')){
+            $grid = Database::query_row(
+                [
+                    'select' => 'id',
+                    'from' => 'grids',
+                    'name' => $name,
+                ]
+            );
 
-        return !is_null($grid) ? (int)$grid['id'] : 0;
+            return !is_null($grid) ? (int)$grid['id'] : 0;
+        }
+
     }
 }

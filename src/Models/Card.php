@@ -19,14 +19,19 @@ class Card
 {
     public static function getBySlug(string $name): int
     {
-        $card = Database::query_row(
-            [
-                'select' => 'id',
-                'from' => 'cards',
-                'name' => $name,
-            ]
-        );
+        if(class_exists('WP_Grid_Builder\Includes\Database')){
+            $card = Database::query_row(
+                [
+                    'select' => 'id',
+                    'from' => 'cards',
+                    'name' => $name,
+                ]
+            );
 
-        return !is_null($card) ? (int)$card['id'] : 0;
+            return !is_null($card) ? (int)$card['id'] : 0;
+        }
+
+        return 0;
+
     }
 }

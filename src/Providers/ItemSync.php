@@ -90,9 +90,12 @@ abstract class ItemSync
      */
     protected function saveRow(int $itemId, array $settings)
     {
-        Database::save_row($this->type, $settings, $itemId);
-        $slug = $settings[$this->identifier];
-        $this->fs->setDbLastUpdated($this->fs->getLastUpdated(), $slug);
+        if(class_exists('WP_Grid_Builder\Includes\Database')) {
+            Database::save_row($this->type, $settings, $itemId);
+            $slug = $settings[$this->identifier];
+            $this->fs->setDbLastUpdated($this->fs->getLastUpdated(), $slug);
+        }
+
     }
 
     /**

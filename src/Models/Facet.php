@@ -19,14 +19,18 @@ class Facet
 {
     public static function getBySlug(string $slug): int
     {
-        $facet = Database::query_row(
-            [
-                'select' => 'id',
-                'from' => 'facets',
-                'slug' => $slug,
-            ]
-        );
+        if(class_exists('WP_Grid_Builder\Includes\Database')){
+            $facet = Database::query_row(
+                [
+                    'select' => 'id',
+                    'from' => 'facets',
+                    'slug' => $slug,
+                ]
+            );
 
-        return !is_null($facet) ? (int)$facet['id'] : 0;
+            return !is_null($facet) ? (int)$facet['id'] : 0;
+        }
+
+        return 0;
     }
 }
