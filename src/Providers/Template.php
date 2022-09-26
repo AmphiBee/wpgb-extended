@@ -14,7 +14,7 @@ namespace AmphiBee\WpgbExtended\Providers;
  */
 class Template
 {
-    protected $classes = [];
+    protected $classes;
     protected $sourceType = 'post_type';
     protected $isMainQuery = false;
     protected $renderCallback;
@@ -67,7 +67,7 @@ class Template
     public function getTemplateArgs(): array
     {
         return [
-            'class' => implode(' ', $this->getClasses()),
+            'class' => $this->getClasses(),
             'source_type' => $this->getSourceType(),
             'query_args' => $this->getQueryArgs(),
             'is_main_query' => $this->getIsMainQuery(),
@@ -77,21 +77,26 @@ class Template
     }
 
     /**
-     * Get the wrapper classes
-     * @return array
+     * @return mixed
      */
-    public function getClasses(): array
+    public function getClasses()
     {
         return $this->classes;
     }
 
     /**
      * Set the wrapper classes
-     * @param array $classes
-     * @return Template
+     * @param $classes
+     * @return $this
      */
-    public function setClasses(array $classes): Template
+    public function setClasses($classes): Template
     {
+        if(!is_array($classes))
+        {
+            $this->classes = explode(' ', $classes);
+            return $this;
+        }
+
         $this->classes = $classes;
         return $this;
     }
