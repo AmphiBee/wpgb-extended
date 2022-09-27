@@ -9,7 +9,7 @@ use AmphiBee\WpgbExtended\Providers\Grids\GridSync;
 
 class SyncManager implements Hookable
 {
-    public $hook = 'init';
+    public $hook = 'wp_grid_builder/init';
     public $priority = 10;
 
     public function execute()

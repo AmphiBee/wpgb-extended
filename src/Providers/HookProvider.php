@@ -20,7 +20,7 @@ class HookProvider
      * @var array
      */
     protected $default = [
-        'hook'     => 'init',
+        'hook'     => 'wp_grid_builder/init',
         'priority' => 12,
     ];
 

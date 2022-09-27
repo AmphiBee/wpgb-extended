@@ -1,4 +1,5 @@
 <?php
+
 namespace AmphiBee\WpgbExtended\Providers;
 
 /**
@@ -51,7 +52,7 @@ class Template
 
         // Override the wrapper tag if needed
         if ($overrideTag = $this->getWrapperTag()) {
-            add_filter( 'wp_grid_builder/layout/wrapper_tag', function ($tag, $settings) use ($overrideTag, $slug) {
+            add_filter('wp_grid_builder/layout/wrapper_tag', function ($tag, $settings) use ($overrideTag, $slug) {
                 if ($settings->id === $slug) {
                     $tag = $overrideTag;
                 }
@@ -87,12 +88,12 @@ class Template
 
     /**
      * Set the wrapper classes
-     * @param array $classes
+     * @param string|array $classes
      * @return Template
      */
-    public function setClasses(array $classes): Template
+    public function setClasses($classes): Template
     {
-        $this->classes = $classes;
+        $this->classes = is_array($classes) ? $classes : (array)$classes;
         return $this;
     }
 
