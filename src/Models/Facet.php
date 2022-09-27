@@ -29,4 +29,18 @@ class Facet
 
         return !is_null($facet) ? (int)$facet['id'] : 0;
     }
+
+
+    public static function getById(string $id)
+    {
+        $facet = Database::query_row(
+            [
+                'select' => 'slug',
+                'from' => 'facets',
+                'id' => $id,
+            ]
+        );
+
+        return !is_null($facet) ? $facet['slug'] : false;
+    }
 }

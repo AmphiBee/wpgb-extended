@@ -25,6 +25,14 @@ class ExtendedFacetArgs implements Hookable
         if (isset($args['slug'])) {
             $this->args['id'] = Facet::getBySlug($args['slug']);
         }
+
+        if (apply_filters('wpgb_extended/enable_facet_class_from_db', false) && !isset($args['slug']) && $slug = Facet::getById($args['id'])) {
+            $args['slug'] = $slug;
+        }
+
+        if (isset($args['slug'])) {
+            $this->args['class'] .=  (isset($args['class']) ? ' ' : '') . "wpgb-facet-{$args['slug']}";
+        }
     }
     /**
      * The actions to perform.

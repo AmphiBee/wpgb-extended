@@ -38,7 +38,7 @@ abstract class ItemSync
      */
     public function isSyncEnabled(): bool
     {
-        return apply_filters('wpgb/enable_sync', true) && apply_filters("wpgb/{$this->type}/enable_sync", true);
+        return apply_filters('wpgb_extended/enable_sync', true) && apply_filters("wpgb/{$this->type}/enable_sync", true);
     }
 
     /**

@@ -54,6 +54,16 @@ wpgb_render_facet([
 ])
 ```
 
+### Improved facet rendering
+
+Facets have the slug class make you more powerful styling !
+
+Note : by default, class are only added when `wpgb_render_facet` is called by slug. If you want to enable it when a facet is called by ID, you need to enable it with this filter :
+
+```
+add_filter('wpgb_extended/enable_facet_class_from_db', '__return_true');
+```
+
 ###  Registering facets
 
 @TODO
@@ -62,7 +72,7 @@ wpgb_render_facet([
 
 Gridbuilder ᵂᴾ Extended allows you to synchronize all of your content (grids, cards, facets). This is useful when working with multiple environments (local, staging, production).
 Like Advanced Custom Fields, the grids, cards, facets are stored in json files. By default, they are stored in your theme folder (`wpgb-json` folder).
-You can customize this folder with the `wp_grid_builder/sync/json_folder` filter
+You can customize this folder with the `wpgb_extended/sync/json_folder` filter
 
 It's possible to deactivate the synchronization globally with the filter `wp_grid_builder/enable_sync` or to deactivate it by entity with the filter `wpgb/{$type}/enable_sync` (ex. `wpgb/card/enable_sync`)
 
