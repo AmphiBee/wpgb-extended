@@ -1,4 +1,5 @@
 <?php
+
 namespace AmphiBee\WpgbExtended\Models;
 
 /**
@@ -12,23 +13,18 @@ namespace AmphiBee\WpgbExtended\Models;
  * @version 1.0
  * @license https://opensource.org/licenses/mit-license.html MIT License
  */
-
-use WP_Grid_Builder\Includes\Database;
-
 class Card
 {
     protected static $_cached = [];
 
     public static function getBySlug(string $name): int
     {
-        self::$_cached[$name] = self::$_cached[$name] ?? Database::query_row(
+        return Database::query_row(
             [
                 'select' => 'id',
                 'from' => 'cards',
                 'name' => $name,
             ]
         );
-
-        return !is_null(self::$_cached[$name]) ? (int)self::$_cached[$name]['id'] : 0;
     }
 }

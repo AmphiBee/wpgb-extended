@@ -1,4 +1,5 @@
 <?php
+
 namespace AmphiBee\WpgbExtended\Models;
 
 /**
@@ -21,14 +22,12 @@ class Grid
 
     public static function getBySlug(string $name): int
     {
-        self::$_cached[$name] = self::$_cached[$name] ?? Database::query_row(
+        return Database::query_row(
             [
                 'select' => 'id',
                 'from' => 'grids',
                 'name' => $name,
             ]
         );
-
-        return !is_null(self::$_cached[$name]) ? (int)self::$_cached[$name]['id'] : 0;
     }
 }
