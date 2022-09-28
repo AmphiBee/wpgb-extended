@@ -17,9 +17,11 @@ use WP_Grid_Builder\Includes\Database;
 
 class Card
 {
+    protected static $_cached = [];
+
     public static function getBySlug(string $name): int
     {
-        $card = Database::query_row(
+        self::$_cached[$name] = self::$_cached[$name] ?? Database::query_row(
             [
                 'select' => 'id',
                 'from' => 'cards',
@@ -27,6 +29,6 @@ class Card
             ]
         );
 
-        return !is_null($card) ? (int)$card['id'] : 0;
+        return !is_null(self::$_cached[$name]) ? (int)self::$_cached[$name]['id'] : 0;
     }
 }

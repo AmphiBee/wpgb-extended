@@ -17,9 +17,11 @@ use WP_Grid_Builder\Includes\Database;
 
 class Facet
 {
+    protected static $_cached = [];
+
     public static function getBySlug(string $slug): int
     {
-        $facet = Database::query_row(
+        self::$_cached[$slug] = self::$_cached[$slug] ?? Database::query_row(
             [
                 'select' => 'id',
                 'from' => 'facets',
@@ -27,13 +29,13 @@ class Facet
             ]
         );
 
-        return !is_null($facet) ? (int)$facet['id'] : 0;
+        return !is_null(self::$_cached[$slug]) ? (int)self::$_cached[$slug]['id'] : 0;
     }
 
 
     public static function getById(string $id)
     {
-        $facet = Database::query_row(
+        self::$_cached[$id] = self::$_cached[$id] ?? Database::query_row(
             [
                 'select' => 'slug',
                 'from' => 'facets',
@@ -41,6 +43,6 @@ class Facet
             ]
         );
 
-        return !is_null($facet) ? $facet['slug'] : false;
+        return !is_null(self::$_cached[$id]) ? self::$_cached[$id]['slug'] : false;
     }
 }

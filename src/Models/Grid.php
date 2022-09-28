@@ -17,9 +17,11 @@ use WP_Grid_Builder\Includes\Database;
 
 class Grid
 {
+    protected static $_cached = [];
+
     public static function getBySlug(string $name): int
     {
-        $grid = Database::query_row(
+        self::$_cached[$name] = self::$_cached[$name] ?? Database::query_row(
             [
                 'select' => 'id',
                 'from' => 'grids',
@@ -27,6 +29,6 @@ class Grid
             ]
         );
 
-        return !is_null($grid) ? (int)$grid['id'] : 0;
+        return !is_null(self::$_cached[$name]) ? (int)self::$_cached[$name]['id'] : 0;
     }
 }
