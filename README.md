@@ -35,8 +35,7 @@ Template::make('post-list')
     'posts_per_page' => 10,
   ])
   ->setRenderCallback('prefix_render_callback')
-  ->setNoResultsCallback('prefix_noresults_callback')
-  ->register();
+  ->setNoResultsCallback('prefix_noresults_callback');
 ```
 
 Visit the official [Gridbuilder ᵂᴾ template documentation](https://docs.wpgridbuilder.com/resources/filter-templates/) to read more about the template settings.

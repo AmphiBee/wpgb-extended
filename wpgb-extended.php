@@ -3,7 +3,7 @@
 Plugin Name: 	Gridbuilder ᵂᴾ Extended
 Plugin URI:		https://github.com/AmphiBee/wpgb-extended/
 Description: 	Gridbuilder ᵂᴾ Extended provides an object oriented API to register templates and (soon) facets. If you register template or facets in your theme, you can safely rely on version control when working with other developers.
-Version: 		1.0
+Version: 		1.1
 Author: 		AmphiBee
 Author URI: 	https://amphibee.fr
 Text Domain: 	wpgb-extended

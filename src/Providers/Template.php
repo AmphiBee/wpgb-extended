@@ -2,6 +2,8 @@
 
 namespace AmphiBee\WpgbExtended\Providers;
 
+use AmphiBee\Hooks\Filter;
+
 /**
  * Template
  *
@@ -21,12 +23,27 @@ class Template
     protected $renderCallback;
     protected $noResultsCallback;
     protected $queryArgs = [];
-    protected $slug;
-    protected $wrapperTag;
+    protected static $slug;
+    protected static $wrapperTag = 'div';
 
     public function __construct(?string $slug = null)
     {
-        $this->setSlug($slug);
+        // Register template
+        Filter::add('wp_grid_builder/templates', function ($templates) use ($slug) {
+            $templateArgs = $this->getTemplateArgs();
+            $templates[$slug] = $templateArgs;
+            return $templates;
+        }, 10, 1);
+
+        // Override the wrapper tag if needed
+
+        Filter::add('wp_grid_builder/layout/wrapper_tag', function ($tag, $settings) use ($slug) {
+            if ($settings->id === $slug && self::$wrapperTag !== 'div') {
+                $tag = self::$wrapperTag;
+            }
+            return $tag;
+        }, 90, 2);
+
     }
 
     /** @return static */
@@ -38,27 +55,11 @@ class Template
     /**
      * Register the template
      * @return void
+     * @deprecated 1.1
      */
     public function register()
     {
-        $templateArgs = $this->getTemplateArgs();
-        $slug = $this->getSlug();
-
-        // Register template
-        add_filter('wp_grid_builder/templates', function ($templates) use ($slug, $templateArgs) {
-            $templates[$slug] = $templateArgs;
-            return $templates;
-        }, 10, 1);
-
-        // Override the wrapper tag if needed
-        if ($overrideTag = $this->getWrapperTag()) {
-            add_filter('wp_grid_builder/layout/wrapper_tag', function ($tag, $settings) use ($overrideTag, $slug) {
-                if ($settings->id === $slug) {
-                    $tag = $overrideTag;
-                }
-                return $tag;
-            }, 90, 2);
-        }
+        _deprecated_function(__METHOD__, '1.1');
     }
 
     /**
@@ -203,7 +204,7 @@ class Template
      */
     public function getSlug(): string
     {
-        return $this->slug;
+        return self::$slug;
     }
 
     /**
@@ -213,7 +214,7 @@ class Template
      */
     public function setSlug(string $slug): Template
     {
-        $this->slug = $slug;
+        self::$slug = $slug;
         return $this;
     }
 
@@ -223,7 +224,7 @@ class Template
      */
     public function getWrapperTag(): string
     {
-        return $this->wrapperTag;
+        return self::$wrapperTag;
     }
 
     /**
@@ -233,7 +234,7 @@ class Template
      */
     public function setWrapperTag(string $wrapperTag): Template
     {
-        $this->wrapperTag = $wrapperTag;
+        self::$wrapperTag = $wrapperTag;
         return $this;
     }
 
