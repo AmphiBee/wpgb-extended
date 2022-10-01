@@ -24,7 +24,7 @@ Download the [Gridbuilder ᵂᴾ](https://wpgridbuilder.com/pricing/) plugin and
 Use the `Template::make()` function to register a new template. Below you'll find an example of a template registration.
 
 ```php
-use WpgbExtended\Providers\Template;
+use WpgbExtended\Facades\Template;
 
 Template::make('post-list')
   ->setSourceType('post')

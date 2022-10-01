@@ -18,7 +18,7 @@ class Template
     /** @return static */
     public static function make(?string $slug = null): TemplateFacade
     {
-        _deprecated_function(__METHOD__, '1.1', 'AmphiBee\WpgbExtended\Facades\Template instead');
+        _deprecated_function(__METHOD__, '1.11', 'AmphiBee\WpgbExtended\Facades\Template instead');
         return new TemplateFacade($slug);
     }
 }
