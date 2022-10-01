@@ -4,7 +4,7 @@ namespace AmphiBee\WpgbExtended\Providers;
 
 use AmphiBee\Hooks\Action;
 use AmphiBee\Hooks\Filter;
-use AmphiBee\WpgbExtended\Support\Facades\Config;
+use AmphiBee\WpgbExtended\Facades\Config;
 
 /**
  * @author   AmphiBee

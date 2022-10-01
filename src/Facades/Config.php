@@ -1,6 +1,6 @@
 <?php
 
-namespace AmphiBee\WpgbExtended\Support\Facades;
+namespace AmphiBee\WpgbExtended\Facades;
 
 /**
  * Class Config : Config loader
