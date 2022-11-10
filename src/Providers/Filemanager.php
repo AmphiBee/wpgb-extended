@@ -84,7 +84,7 @@ class Filemanager
 
         $this->lastUpdated = $this->getLastUpdatedDatas();
 
-        return (int)$this->lastUpdated[$itemSlug];
+        return (int)($this->lastUpdated[$itemSlug] ?? 0);
     }
 
     /**
@@ -150,8 +150,9 @@ class Filemanager
         return update_option("wpgb/{$this->type}/last_sync", $lastSync, true);
     }
 
-    public function cleanLastSyncParams(array $params): array {
-        $allowed = [ '_wpgb_last_sync' ];
+    public function cleanLastSyncParams(array $params): array
+    {
+        $allowed = ['_wpgb_last_sync'];
 
         foreach ($this->getJsonFiles() as $jsonFile) {
             $allowed[] = str_replace('.json', '', basename($jsonFile));
