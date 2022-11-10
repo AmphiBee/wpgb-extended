@@ -13,9 +13,6 @@ namespace AmphiBee\WpgbExtended\Models;
  * @version 1.0
  * @license https://opensource.org/licenses/mit-license.html MIT License
  */
-
-use WP_Grid_Builder\Includes\Database as WpgbDatabase;
-
 abstract class Database
 {
     protected static $_cached = [];
@@ -23,8 +20,11 @@ abstract class Database
 
     public static function query_row(array $args)
     {
+        if (!class_exists('WP_Grid_Builder\Includes\Database')) {
+            return 0;
+        }
         $hash = self::getArgumentHash($args);
-        self::$_cached[$hash] = self::$_cached[$hash] ?? WpgbDatabase::query_row($args);
+        self::$_cached[$hash] = self::$_cached[$hash] ?? WP_Grid_Builder\Includes\Database::query_row($args);
         return !is_null(self::$_cached[$hash]) ? self::$_cached[$hash][$args['select']] : 0;
     }
 
