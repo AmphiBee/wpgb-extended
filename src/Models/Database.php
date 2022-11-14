@@ -24,7 +24,7 @@ abstract class Database
             return 0;
         }
         $hash = self::getArgumentHash($args);
-        self::$_cached[$hash] = self::$_cached[$hash] ?? WP_Grid_Builder\Includes\Database::query_row($args);
+        self::$_cached[$hash] = self::$_cached[$hash] ?? \WP_Grid_Builder\Includes\Database::query_row($args);
         return !is_null(self::$_cached[$hash]) ? self::$_cached[$hash][$args['select']] : 0;
     }
 
